@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxs.mall.dao.ItemsDao">
+    <select id="getAllItems" resultType="Items">
+        select item_id,item_name,original_price,promotion_price,image_id
+        from items
+        order by hot_number,item_id
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="getItemsById" resultType="Items" parameterType="int">
+        select item_id,item_name,item_describe,original_price,promotion_price,repetory,sold_number,image_id
+        from items
+        where item_id = #{id}
+    </select>
+</mapper>

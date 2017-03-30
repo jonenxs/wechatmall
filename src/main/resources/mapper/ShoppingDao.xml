@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxs.mall.dao.ShoppingDao">
+    <select id="getAllShoppingItemsByUserId" resultType="ShoppingCart">
+        SELECT
+          s.cart_id,
+          s.user_id,
+          s.item_id,
+          s.cart_item_number,
+          i.item_id "items.item_id",
+          i.item_name "items.item_name",
+          i.promotion_price "items.promotion_price",
+          i.image_id "items.image_id"
+        FROM shopping_cart s
+        INNER JOIN items i ON s.item_id = i.item_id
+        WHERE s.user_id = #{userId}
+        ORDER BY cart_id
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="getShoppingItemsByUserIdAndItemId" resultType="Integer">
+        SELECT
+        COUNT(*)
+        FROM shopping_cart s
+        INNER JOIN items i ON s.item_id = i.item_id
+        WHERE s.user_id = #{userId}
+        AND s.item_id = #{itemId}
+    </select>
+
+    <update id="updateShoppingItemsNumber" >
+        UPDATE shopping_cart s
+        SET s.cart_item_number = s.cart_item_number + #{num}
+        WHERE s.user_id = #{userId}
+        AND s.item_id = #{itemId}
+    </update>
+    
+    <insert id="insertShoppingItems">
+        INSERT INTO shopping_cart(user_id,item_id,cart_item_number)
+        VALUES(#{userId},#{itemId},1)
+    </insert>
+
+    <delete id="deleteShoppingItems">
+        DELETE FROM shopping_cart
+        WHERE user_id = #{userId}
+        AND item_id = #{itemId}
+    </delete>
+
+    <select id="getShoppingCartsByItemIds" resultType="ShoppingCart">
+        SELECT item_id,cart_item_number
+        FROM shopping_cart
+        WHERE user_id = #{userId}
+        AND item_id IN
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

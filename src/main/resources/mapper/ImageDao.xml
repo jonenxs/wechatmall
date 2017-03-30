@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nxs.mall.dao.ImageDao">
+    <insert id="imageInsert" parameterType="ImageWithBLOBs">
+        insert into images(image_name,image_content)
+        values (#{imageName,jdbcType=VARCHAR},#{imageContent, javaType=byte[], jdbcType=BLOB, typeHandler=org.apache.ibatis.type.BlobTypeHandler})
+    </insert>
+
+    <select id="getImageById" resultType="ImageWithBLOBs" parameterType="Integer">
+        select * from images
+        where image_id = #{id}
+    </select>
+    <select id="getImageidsByItemId" resultType="Integer" parameterType="Integer">
+        select image_id from images
+        where item_id = #{id}
+    </select>
+
+</mapper>
